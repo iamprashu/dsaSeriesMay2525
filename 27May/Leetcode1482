@@ -1,0 +1,55 @@
+class Solution {
+public:
+    bool canMake(int mid, vector<int>& bloomDay, int m, int k){
+        
+        int bouq = 0;
+        int flowers = 0;
+        for(int i=0; i<bloomDay.size(); i++){
+           //check adjecent 
+           if(bloomDay[i]<=mid){
+                flowers++;
+                if(flowers == k){
+                    bouq++;
+                    flowers=0;
+                }
+           }else{
+                flowers = 0;
+           }
+        } 
+        return bouq >= m; // agar boq jyada h to true else false
+    }
+    int minDays(vector<int>& bloomDay, int m, int k) {
+        //using search space with binary search here 
+        //edge case
+        long long  minimumFlowerNeed = (long long) m * k;
+        int size = bloomDay.size();
+
+        if(minimumFlowerNeed > size){
+            return -1;
+        }
+
+        int minimumDays = *min_element(bloomDay.begin(),bloomDay.end());
+        int maximumDays = *max_element(bloomDay.begin(),bloomDay.end());
+
+        //now i have a search space in which i can get check if the bouquets can be made or not
+
+        int start = minimumDays;
+        int end = maximumDays;
+
+        int answer = INT_MAX; 
+
+        while(start<=end){
+            int mid = start + (end-start)/2;
+
+            if(canMake(mid,bloomDay,m,k)){
+                answer = mid;
+                end = mid-1;
+            }else{
+                start = mid+1;
+            }
+        }
+
+        return answer;
+        
+    }
+};
